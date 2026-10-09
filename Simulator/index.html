@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lumina Camera — iOS Simulator Web Runner</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    body {
+      background: #0d0f12;
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .header-info {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .header-info h1 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: #f5f5f7;
+    }
+    .header-info p {
+      font-size: 13px;
+      color: #86868b;
+      margin-top: 4px;
+    }
+
+    /* iPhone 15 Pro Chassis */
+    .iphone-frame {
+      width: 400px;
+      height: 820px;
+      background: #000;
+      border-radius: 54px;
+      box-shadow: 0 0 0 4px #2c2d30, 0 0 0 7px #1c1d1f, 0 25px 60px rgba(0,0,0,0.85);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Dynamic Island */
+    .dynamic-island {
+      position: absolute;
+      top: 11px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 125px;
+      height: 35px;
+      background: #000;
+      border-radius: 20px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+    }
+    .camera-lens-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: #111425;
+      border: 1px solid #1e2640;
+    }
+
+    /* Status Bar */
+    .status-bar {
+      height: 52px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding: 0 32px 6px;
+      font-size: 14px;
+      font-weight: 600;
+      z-index: 90;
+      color: #fff;
+    }
+
+    /* Top Toolbar */
+    .top-toolbar {
+      height: 48px;
+      background: rgba(0,0,0,0.65);
+      backdrop-filter: blur(20px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      z-index: 80;
+    }
+    .tool-btn {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 10px;
+      border-radius: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s;
+    }
+    .tool-btn:hover {
+      background: rgba(255,255,255,0.15);
+    }
+    .badge-raw {
+      background: #d4a373;
+      color: #000;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    /* Viewfinder */
+    .viewfinder-container {
+      flex: 1;
+      position: relative;
+      background: #111;
+      overflow: hidden;
+      cursor: crosshair;
+    }
+    #cameraCanvas {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Overlays Canvas */
+    #overlayCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    /* Histogram Canvas */
+    .histogram-card {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(0,0,0,0.65);
+      border: 1px solid rgba(255,255,255,0.15);
+      backdrop-filter: blur(12px);
+      border-radius: 8px;
+      padding: 4px 6px;
+      pointer-events: none;
+    }
+    #histCanvas {
+      width: 90px;
+      height: 45px;
+      display: block;
+    }
+
+    /* Focus reticle */
+    .focus-ring {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      border: 1.5px solid #ffcc00;
+      border-radius: 8px;
+      transform: translate(-50%, -50%) scale(1.4);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.25s;
+    }
+    .focus-ring.active {
+      transform: translate(-50%, -50%) scale(1.0);
+      opacity: 1;
+    }
+
+    /* Horizon Level */
+    .horizon-indicator {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 140px;
+      height: 2px;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .horizon-line {
+      width: 50px;
+      height: 2px;
+      background: rgba(255,255,255,0.7);
+    }
+    .horizon-center {
+      width: 8px;
+      height: 8px;
+      border: 2px solid rgba(255,255,255,0.8);
+      border-radius: 50%;
+    }
+
+    /* Controls Panel */
+    .controls-panel {
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      z-index: 80;
+    }
+
+    /* Parameter Horizontal Ruler Dial */
+    .dial-container {
+      height: 52px;
+      background: rgba(18, 18, 20, 0.95);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .dial-indicator {
+      position: absolute;
+      left: 50%;
+      top: 6px;
+      bottom: 6px;
+      width: 2px;
+      background: #ffcc00;
+      transform: translateX(-50%);
+      z-index: 10;
+    }
+    .dial-track {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      cursor: grab;
+      position: absolute;
+      left: 50%;
+      transition: transform 0.08s ease-out;
+      will-change: transform;
+    }
+    .dial-item {
+      width: 60px;
+      flex-shrink: 0;
+      text-align: center;
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.5);
+      font-family: ui-monospace, Menlo, Consolas, monospace;
+    }
+    .dial-item.active {
+      color: #ffcc00;
+      font-weight: 800;
+    }
+
+    /* Manual Control Tabs */
+    .manual-bar {
+      height: 48px;
+      display: flex;
+      background: #08080a;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .manual-tab {
+      flex: 1;
+      background: none;
+      border: none;
+      color: #777;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .manual-tab .tab-title {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .manual-tab .tab-val {
+      font-size: 12px;
+      font-weight: 700;
+      margin-top: 2px;
+      font-family: ui-monospace, Menlo, Consolas, monospace;
+      color: #bbb;
+    }
+    .manual-tab.active {
+      background: rgba(255,204,0,0.12);
+    }
+    .manual-tab.active .tab-title {
+      color: #ffcc00;
+    }
+    .manual-tab.active .tab-val {
+      color: #ffcc00;
+    }
+
+    /* Bottom Shutter & Lens Area */
+    .shutter-bar {
+      height: 105px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px 14px;
+      background: #000;
+    }
+    .thumb-btn {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: #222;
+      border: 2px solid #333;
+      overflow: hidden;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .thumb-btn img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .shutter-btn {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      border: 4px solid #fff;
+      padding: 3px;
+      background: transparent;
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+    .shutter-btn:active {
+      transform: scale(0.92);
+    }
+    .shutter-inner {
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      border-radius: 50%;
+    }
+    .lens-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #1c1d1f;
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      font-family: ui-monospace, Menlo, Consolas, monospace;
+      cursor: pointer;
+    }
+
+    /* Modal Sheet */
+    .modal-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(8px);
+      z-index: 200;
+      display: none;
+      align-items: flex-end;
+    }
+    .modal-sheet {
+      width: 100%;
+      background: #1c1d1f;
+      border-radius: 28px 28px 0 0;
+      padding: 24px;
+      max-height: 85%;
+      overflow-y: auto;
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .modal-title {
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .close-btn {
+      background: #2c2d30;
+      border: none;
+      color: #fff;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .setting-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      font-size: 14px;
+    }
+    .setting-row select {
+      background: #2c2d30;
+      color: #fff;
+      border: 1px solid #444;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header-info">
+    <h1>Lumina: Manual Camera</h1>
+    <p>🍎 iOS Simulator Interactive Preview (SwiftUI & AVFoundation)</p>
+  </div>
+
+  <div class="iphone-frame">
+    <!-- Dynamic Island -->
+    <div class="dynamic-island">
+      <div class="camera-lens-dot"></div>
+      <div style="width: 8px; height: 8px; border-radius: 50%; background: #00e676; opacity: 0.8;" title="Camera Active"></div>
+    </div>
+
+    <!-- Status Bar -->
+    <div class="status-bar">
+      <span id="currentTime">09:41</span>
+      <div style="display: flex; gap: 6px; font-size: 12px;">
+        <span>5G</span>
+        <span>100%</span>
+      </div>
+    </div>
+
+    <!-- Top Toolbar -->
+    <div class="top-toolbar">
+      <button class="tool-btn" id="flashBtn" onclick="toggleFlash()">⚡ OFF</button>
+      <button class="tool-btn" id="formatBtn" onclick="toggleFormat()"><span class="badge-raw">RAW DNG</span></button>
+      <button class="tool-btn" id="modeBtn" onclick="cycleMode()">📷 PHOTO</button>
+      <button class="tool-btn" id="overlayBtn" onclick="cycleGrid()">📐 3x3</button>
+      <button class="tool-btn" onclick="openSettings()">⚙️</button>
+    </div>
+
+    <!-- Live Viewfinder -->
+    <div class="viewfinder-container" id="vfContainer" onclick="handleTapToFocus(event)">
+      <canvas id="cameraCanvas"></canvas>
+      <canvas id="overlayCanvas"></canvas>
+
+      <!-- Focus Reticle -->
+      <div class="focus-ring" id="focusRing"></div>
+
+      <!-- Gyro Level Horizon -->
+      <div class="horizon-indicator" id="horizonIndicator">
+        <div class="horizon-line"></div>
+        <div class="horizon-center"></div>
+        <div class="horizon-line"></div>
+      </div>
+
+      <!-- Realtime Histogram -->
+      <div class="histogram-card">
+        <canvas id="histCanvas"></canvas>
+      </div>
+    </div>
+
+    <!-- Controls Area -->
+    <div class="controls-panel">
+      <!-- Dial Slider -->
+      <div class="dial-container" id="dialContainer">
+        <div class="dial-indicator"></div>
+        <div class="dial-track" id="dialTrack"></div>
+      </div>
+
+      <!-- 5 Manual Tabs -->
+      <div class="manual-bar">
+        <button class="manual-tab active" onclick="selectTab('sec')">
+          <span class="tab-title">SEC</span>
+          <span class="tab-val" id="valSec">1/125s</span>
+        </button>
+        <button class="manual-tab" onclick="selectTab('iso')">
+          <span class="tab-title">ISO</span>
+          <span class="tab-val" id="valIso">100</span>
+        </button>
+        <button class="manual-tab" onclick="selectTab('focus')">
+          <span class="tab-title">FOCUS</span>
+          <span class="tab-val" id="valFocus">AF</span>
+        </button>
+        <button class="manual-tab" onclick="selectTab('wb')">
+          <span class="tab-title">WB</span>
+          <span class="tab-val" id="valWb">5500K</span>
+        </button>
+        <button class="manual-tab" onclick="selectTab('ev')">
+          <span class="tab-title">EV</span>
+          <span class="tab-val" id="valEv">0.0</span>
+        </button>
+      </div>
+
+      <!-- Shutter & Lens -->
+      <div class="shutter-bar">
+        <div class="thumb-btn" id="galleryBtn" onclick="openGallery()">
+          <span style="font-size: 20px;">🖼️</span>
+        </div>
+
+        <button class="shutter-btn" onclick="capturePhoto()">
+          <div class="shutter-inner"></div>
+        </button>
+
+        <button class="lens-btn" id="lensBtn" onclick="cycleLens()">1x</button>
+      </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settingsModal">
+      <div class="modal-sheet">
+        <div class="modal-header">
+          <div class="modal-title">Camera Settings</div>
+          <button class="close-btn" onclick="closeSettings()">✕</button>
+        </div>
+        <div class="setting-row">
+          <span>Capture Format</span>
+          <select id="selFormat" onchange="applyFormat(this.value)">
+            <option value="RAW (DNG)" selected>RAW (DNG)</option>
+            <option value="HEIC">Apple HEIC</option>
+            <option value="JPEG">JPEG</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <span>Color Space</span>
+          <select>
+            <option selected>Display P3 (Wide Color)</option>
+            <option>sRGB</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <span>Post-Processing</span>
+          <select>
+            <option selected>Off (Pure Sensor RAW)</option>
+            <option>Low</option>
+            <option>Standard</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <span>Focus Peaking</span>
+          <input type="checkbox" id="chkPeaking" checked onchange="togglePeaking(this.checked)">
+        </div>
+        <div class="setting-row">
+          <span>Zebra Stripes (95%+)</span>
+          <input type="checkbox" id="chkZebra" checked onchange="toggleZebra(this.checked)">
+        </div>
+      </div>
+    </div>
+
+    <!-- Gallery / EXIF Modal -->
+    <div class="modal-overlay" id="galleryModal">
+      <div class="modal-sheet">
+        <div class="modal-header">
+          <div class="modal-title">EXIF Inspector</div>
+          <button class="close-btn" onclick="closeGallery()">✕</button>
+        </div>
+        <div id="exifContent">
+          <div class="setting-row"><span>Camera</span><strong>iPhone 15 Pro (AVFoundation)</strong></div>
+          <div class="setting-row"><span>Lens</span><strong id="exifLens">24mm f/1.78 (1x)</strong></div>
+          <div class="setting-row"><span>Shutter Speed</span><strong id="exifShutter">1/125s</strong></div>
+          <div class="setting-row"><span>ISO</span><strong id="exifIso">ISO 100</strong></div>
+          <div class="setting-row"><span>Format</span><strong id="exifFormat">DNG (14-bit RAW)</strong></div>
+          <div class="setting-row"><span>Color Space</span><strong>Apple Display P3</strong></div>
+          <div class="setting-row"><span>Dimensions</span><strong>8064 × 6048 (48 MP)</strong></div>
+          <div class="setting-row"><span>Timestamp</span><strong id="exifTime">Just now</strong></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Clock
+    setInterval(() => {
+      const d = new Date();
+      document.getElementById('currentTime').innerText = d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    }, 1000);
+
+    // Camera parameters data
+    const dialOptions = {
+      sec: ["1/8000s", "1/4000s", "1/2000s", "1/1000s", "1/500s", "1/250s", "1/125s", "1/60s", "1/30s", "1/15s", "1/8s", "1/4s", "0.5s", "1s", "2s"],
+      iso: ["50", "80", "100", "200", "400", "800", "1600", "3200", "6400"],
+      focus: ["AF", "0.1m", "0.2m", "0.3m", "0.5m", "1.0m", "2.0m", "5.0m", "∞"],
+      wb: ["AWB", "2800K", "3200K", "4000K", "5000K", "5500K", "6500K", "7500K"],
+      ev: ["-2.0", "-1.7", "-1.3", "-1.0", "-0.7", "-0.3", "0.0", "+0.3", "+0.7", "+1.0", "+1.3", "+1.7", "+2.0"]
+    };
+
+    let currentTab = 'sec';
+    let currentIndices = { sec: 6, iso: 2, focus: 0, wb: 5, ev: 6 };
+    let currentLens = "1x";
+    let currentGrid = "3x3";
+    let isPeaking = true;
+    let isZebra = true;
+
+    // Canvas Simulation
+    const vfCanvas = document.getElementById('cameraCanvas');
+    const vfCtx = vfCanvas.getContext('2d');
+    const overlayCanvas = document.getElementById('overlayCanvas');
+    const overlayCtx = overlayCanvas.getContext('2d');
+    const histCanvas = document.getElementById('histCanvas');
+    const histCtx = histCanvas.getContext('2d');
+
+    function resizeCanvases() {
+      const container = document.getElementById('vfContainer');
+      vfCanvas.width = container.clientWidth;
+      vfCanvas.height = container.clientHeight;
+      overlayCanvas.width = container.clientWidth;
+      overlayCanvas.height = container.clientHeight;
+      histCanvas.width = 180;
+      histCanvas.height = 90;
+    }
+    resizeCanvases();
+
+    let frame = 0;
+    function renderViewfinder() {
+      frame++;
+      const w = vfCanvas.width;
+      const h = vfCanvas.height;
+
+      // Realistic Photographic Scene Render (Golden hour mountain horizon with soft depth)
+      const grad = vfCtx.createLinearGradient(0, 0, 0, h);
+      const kelvinStr = dialOptions.wb[currentIndices.wb];
+      let warmth = 0.5;
+      if (kelvinStr.includes('K')) {
+        const k = parseInt(kelvinStr);
+        warmth = (k - 2000) / 6000;
+      }
+      const r = Math.min(255, 180 + (1 - warmth) * 60);
+      const b = Math.min(255, 160 + warmth * 80);
+
+      grad.addColorStop(0, `rgb(${r*0.6|0}, 70, ${b*0.8|0})`);
+      grad.addColorStop(0.4, `rgb(${r}, 130, ${b*0.5|0})`);
+      grad.addColorStop(0.55, '#f4a261');
+      grad.addColorStop(1, '#264653');
+      vfCtx.fillStyle = grad;
+      vfCtx.fillRect(0, 0, w, h);
+
+      // Mountains
+      vfCtx.fillStyle = '#1d3557';
+      vfCtx.beginPath();
+      vfCtx.moveTo(0, h * 0.65);
+      for (let x = 0; x <= w; x += 30) {
+        const y = h * 0.65 - Math.sin((x + frame * 0.5) * 0.02) * 25 - Math.cos(x * 0.01) * 35;
+        vfCtx.lineTo(x, y);
+      }
+      vfCtx.lineTo(w, h);
+      vfCtx.lineTo(0, h);
+      vfCtx.fill();
+
+      // Foreground Subject (Golden tree/sculpture)
+      vfCtx.fillStyle = '#111d28';
+      vfCtx.beginPath();
+      vfCtx.arc(w * 0.5, h * 0.75, 45 + Math.sin(frame * 0.02) * 2, 0, Math.PI * 2);
+      vfCtx.fill();
+
+      // Focus Peaking Effect (High pass edges)
+      if (isPeaking) {
+        overlayCtx.clearRect(0, 0, w, h);
+        overlayCtx.strokeStyle = 'rgba(0, 255, 128, 0.85)';
+        overlayCtx.lineWidth = 1.5;
+        overlayCtx.beginPath();
+        overlayCtx.arc(w * 0.5, h * 0.75, 46, 0, Math.PI * 2);
+        overlayCtx.stroke();
+      }
+
+      // Draw Grid Overlays
+      drawGrid();
+
+      // Update Realtime Histogram
+      drawHistogram();
+
+      requestAnimationFrame(renderViewfinder);
+    }
+
+    function drawGrid() {
+      const w = overlayCanvas.width;
+      const h = overlayCanvas.height;
+      overlayCtx.save();
+      overlayCtx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+      overlayCtx.lineWidth = 1;
+
+      if (currentGrid === '3x3') {
+        overlayCtx.beginPath();
+        overlayCtx.moveTo(w / 3, 0); overlayCtx.lineTo(w / 3, h);
+        overlayCtx.moveTo(2 * w / 3, 0); overlayCtx.lineTo(2 * w / 3, h);
+        overlayCtx.moveTo(0, h / 3); overlayCtx.lineTo(w, h / 3);
+        overlayCtx.moveTo(0, 2 * h / 3); overlayCtx.lineTo(w, 2 * h / 3);
+        overlayCtx.stroke();
+      } else if (currentGrid === '4x4') {
+        overlayCtx.beginPath();
+        for (let i = 1; i <= 3; i++) {
+          overlayCtx.moveTo(i * w / 4, 0); overlayCtx.lineTo(i * w / 4, h);
+          overlayCtx.moveTo(0, i * h / 4); overlayCtx.lineTo(w, i * h / 4);
+        }
+        overlayCtx.stroke();
+      }
+      overlayCtx.restore();
+    }
+
+    function drawHistogram() {
+      const hw = histCanvas.width;
+      const hh = histCanvas.height;
+      histCtx.clearRect(0, 0, hw, hh);
+
+      // Gradient area
+      histCtx.fillStyle = 'rgba(255, 204, 0, 0.35)';
+      histCtx.beginPath();
+      histCtx.moveTo(0, hh);
+      for (let i = 0; i <= hw; i += 6) {
+        const peak = Math.exp(-Math.pow((i - hw * 0.45) / (hw * 0.22), 2));
+        const val = peak * (hh * 0.75) + Math.sin(i * 0.2 + frame * 0.05) * 4;
+        histCtx.lineTo(i, hh - val);
+      }
+      histCtx.lineTo(hw, hh);
+      histCtx.closePath();
+      histCtx.fill();
+
+      // Outline
+      histCtx.strokeStyle = '#ffcc00';
+      histCtx.lineWidth = 1.5;
+      histCtx.stroke();
+    }
+
+    // Dial Building
+    function renderDial() {
+      const track = document.getElementById('dialTrack');
+      track.innerHTML = '';
+      const list = dialOptions[currentTab];
+      const activeIdx = currentIndices[currentTab];
+
+      list.forEach((val, i) => {
+        const div = document.createElement('div');
+        div.className = 'dial-item' + (i === activeIdx ? ' active' : '');
+        div.innerText = val;
+        div.onclick = (e) => {
+          e.stopPropagation();
+          setDialIndex(i);
+        };
+        track.appendChild(div);
+      });
+
+      updateTrackOffset();
+    }
+
+    function updateTrackOffset() {
+      const track = document.getElementById('dialTrack');
+      const idx = currentIndices[currentTab];
+      const itemWidth = 60;
+      const offset = -(idx * itemWidth + itemWidth / 2);
+      track.style.transform = `translateX(${offset}px)`;
+    }
+
+    function setDialIndex(idx) {
+      currentIndices[currentTab] = idx;
+      const val = dialOptions[currentTab][idx];
+      const capTab = currentTab.charAt(0).toUpperCase() + currentTab.slice(1);
+      const valElem = document.getElementById('val' + capTab);
+      if (valElem) valElem.innerText = val;
+      renderDial();
+    }
+
+    function selectTab(tab) {
+      currentTab = tab;
+      document.querySelectorAll('.manual-bar .manual-tab').forEach(b => b.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      renderDial();
+    }
+
+    // Tap to focus
+    function handleTapToFocus(e) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const ring = document.getElementById('focusRing');
+      ring.style.left = x + 'px';
+      ring.style.top = y + 'px';
+      ring.classList.add('active');
+      setTimeout(() => ring.classList.remove('active'), 1200);
+    }
+
+    // Lens
+    const lenses = ["0.5x", "1x", "3x", "Front"];
+    let lensIdx = 1;
+    function cycleLens() {
+      lensIdx = (lensIdx + 1) % lenses.length;
+      currentLens = lenses[lensIdx];
+      document.getElementById('lensBtn').innerText = currentLens;
+    }
+
+    // Grid
+    const grids = ["3x3", "4x4", "OFF"];
+    let gridIdx = 0;
+    function cycleGrid() {
+      gridIdx = (gridIdx + 1) % grids.length;
+      currentGrid = grids[gridIdx];
+      document.getElementById('overlayBtn').innerText = '📐 ' + currentGrid;
+    }
+
+    // Shutter capture animation
+    function capturePhoto() {
+      const vf = document.getElementById('vfContainer');
+      vf.style.filter = 'brightness(3)';
+      setTimeout(() => vf.style.filter = 'none', 100);
+
+      const thumb = document.getElementById('galleryBtn');
+      thumb.innerHTML = '<span style="font-size:10px; font-weight:800; color:#ffcc00">RAW</span>';
+      thumb.style.borderColor = '#ffcc00';
+
+      // Update EXIF
+      document.getElementById('exifShutter').innerText = dialOptions.sec[currentIndices.sec];
+      document.getElementById('exifIso').innerText = 'ISO ' + dialOptions.iso[currentIndices.iso];
+      document.getElementById('exifLens').innerText = currentLens === '0.5x' ? '13mm f/2.2' : (currentLens === '3x' ? '77mm f/2.8' : '24mm f/1.78');
+      document.getElementById('exifTime').innerText = new Date().toLocaleTimeString();
+    }
+
+    // Modals
+    function openSettings() { document.getElementById('settingsModal').style.display = 'flex'; }
+    function closeSettings() { document.getElementById('settingsModal').style.display = 'none'; }
+    function openGallery() { document.getElementById('galleryModal').style.display = 'flex'; }
+    function closeGallery() { document.getElementById('galleryModal').style.display = 'none'; }
+
+    function togglePeaking(on) { isPeaking = on; }
+    function toggleZebra(on) { isZebra = on; }
+
+    // Init
+    renderDial();
+    renderViewfinder();
+  </script>
+</body>
+</html>

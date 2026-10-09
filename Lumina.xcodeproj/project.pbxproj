@@ -1,0 +1,553 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1002 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2002 /* Assets.xcassets */; };
+		1003 /* LuminaLogicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2003 /* LuminaLogicTests.swift */; };
+		A0010000000000000000000 /* LuminaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0010000000000000000000 /* LuminaApp.swift */; };
+		A0011000000000000000000 /* CameraModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0011000000000000000000 /* CameraModels.swift */; };
+		A0012000000000000000000 /* ManualParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0012000000000000000000 /* ManualParameters.swift */; };
+		A0013000000000000000000 /* MediaModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0013000000000000000000 /* MediaModels.swift */; };
+		A0014000000000000000000 /* CameraCapabilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0014000000000000000000 /* CameraCapabilities.swift */; };
+		A0015000000000000000000 /* CameraEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0015000000000000000000 /* CameraEngine.swift */; };
+		A0016000000000000000000 /* ManualControlsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0016000000000000000000 /* ManualControlsHelper.swift */; };
+		A0017000000000000000000 /* FrameAnalysisResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0017000000000000000000 /* FrameAnalysisResult.swift */; };
+		A0018000000000000000000 /* VideoFrameAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0018000000000000000000 /* VideoFrameAnalyzer.swift */; };
+		A0019000000000000000000 /* GyroMotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0019000000000000000000 /* GyroMotionManager.swift */; };
+		A0020000000000000000000 /* EnhancedRawEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0020000000000000000000 /* EnhancedRawEngine.swift */; };
+		A0021000000000000000000 /* HdrBracketingEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0021000000000000000000 /* HdrBracketingEngine.swift */; };
+		A0022000000000000000000 /* SmartSelfieVisionEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0022000000000000000000 /* SmartSelfieVisionEngine.swift */; };
+		A0023000000000000000000 /* CameraViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0023000000000000000000 /* CameraViewModel.swift */; };
+		A0024000000000000000000 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0024000000000000000000 /* Colors.swift */; };
+		A0025000000000000000000 /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0025000000000000000000 /* Typography.swift */; };
+		A0026000000000000000000 /* CameraPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0026000000000000000000 /* CameraPreviewView.swift */; };
+		A0027000000000000000000 /* ManualControlBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0027000000000000000000 /* ManualControlBarView.swift */; };
+		A0028000000000000000000 /* ParameterDialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0028000000000000000000 /* ParameterDialView.swift */; };
+		A0029000000000000000000 /* CameraControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0029000000000000000000 /* CameraControlsView.swift */; };
+		A0030000000000000000000 /* TopToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0030000000000000000000 /* TopToolbarView.swift */; };
+		A0031000000000000000000 /* OverlayCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0031000000000000000000 /* OverlayCanvasView.swift */; };
+		A0032000000000000000000 /* CameraScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0032000000000000000000 /* CameraScreen.swift */; };
+		A0033000000000000000000 /* GalleryScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0033000000000000000000 /* GalleryScreen.swift */; };
+		A0034000000000000000000 /* SettingsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0034000000000000000000 /* SettingsScreen.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		3001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4001;
+			remoteInfo = Lumina;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		2002 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2003 /* LuminaLogicTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LuminaLogicTests.swift; sourceTree = "<group>"; };
+		2004 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2005 /* Lumina.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lumina.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2006 /* LuminaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LuminaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B0010000000000000000000 /* LuminaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LuminaApp.swift; sourceTree = "<group>"; };
+		B0011000000000000000000 /* CameraModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraModels.swift; sourceTree = "<group>"; };
+		B0012000000000000000000 /* ManualParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualParameters.swift; sourceTree = "<group>"; };
+		B0013000000000000000000 /* MediaModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaModels.swift; sourceTree = "<group>"; };
+		B0014000000000000000000 /* CameraCapabilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraCapabilities.swift; sourceTree = "<group>"; };
+		B0015000000000000000000 /* CameraEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraEngine.swift; sourceTree = "<group>"; };
+		B0016000000000000000000 /* ManualControlsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualControlsHelper.swift; sourceTree = "<group>"; };
+		B0017000000000000000000 /* FrameAnalysisResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrameAnalysisResult.swift; sourceTree = "<group>"; };
+		B0018000000000000000000 /* VideoFrameAnalyzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoFrameAnalyzer.swift; sourceTree = "<group>"; };
+		B0019000000000000000000 /* GyroMotionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GyroMotionManager.swift; sourceTree = "<group>"; };
+		B0020000000000000000000 /* EnhancedRawEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnhancedRawEngine.swift; sourceTree = "<group>"; };
+		B0021000000000000000000 /* HdrBracketingEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HdrBracketingEngine.swift; sourceTree = "<group>"; };
+		B0022000000000000000000 /* SmartSelfieVisionEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartSelfieVisionEngine.swift; sourceTree = "<group>"; };
+		B0023000000000000000000 /* CameraViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewModel.swift; sourceTree = "<group>"; };
+		B0024000000000000000000 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		B0025000000000000000000 /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
+		B0026000000000000000000 /* CameraPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreviewView.swift; sourceTree = "<group>"; };
+		B0027000000000000000000 /* ManualControlBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualControlBarView.swift; sourceTree = "<group>"; };
+		B0028000000000000000000 /* ParameterDialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParameterDialView.swift; sourceTree = "<group>"; };
+		B0029000000000000000000 /* CameraControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraControlsView.swift; sourceTree = "<group>"; };
+		B0030000000000000000000 /* TopToolbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopToolbarView.swift; sourceTree = "<group>"; };
+		B0031000000000000000000 /* OverlayCanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayCanvasView.swift; sourceTree = "<group>"; };
+		B0032000000000000000000 /* CameraScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraScreen.swift; sourceTree = "<group>"; };
+		B0033000000000000000000 /* GalleryScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryScreen.swift; sourceTree = "<group>"; };
+		B0034000000000000000000 /* SettingsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsScreen.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		6001 = {
+			isa = PBXGroup;
+			children = (
+				6002 /* Lumina */,
+				6003 /* LuminaTests */,
+				6004 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		C00100000000000000000001 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				B0024000000000000000000 /* Colors.swift */,
+				B0025000000000000000000 /* Typography.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		C00100000000000000000002 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				B0026000000000000000000 /* CameraPreviewView.swift */,
+				B0027000000000000000000 /* ManualControlBarView.swift */,
+				B0028000000000000000000 /* ParameterDialView.swift */,
+				B0029000000000000000000 /* CameraControlsView.swift */,
+				B0030000000000000000000 /* TopToolbarView.swift */,
+				B0031000000000000000000 /* OverlayCanvasView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		C00100000000000000000003 /* Screens */ = {
+			isa = PBXGroup;
+			children = (
+				B0032000000000000000000 /* CameraScreen.swift */,
+				B0033000000000000000000 /* GalleryScreen.swift */,
+				B0034000000000000000000 /* SettingsScreen.swift */,
+			);
+			path = Screens;
+			sourceTree = "<group>";
+		};
+		C00100000000000000000004 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				C00100000000000000000001 /* Theme */,
+				C00100000000000000000002 /* Components */,
+				C00100000000000000000003 /* Screens */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		C00100000000000000000005 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				B0010000000000000000000 /* LuminaApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		C00100000000000000000006 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B0011000000000000000000 /* CameraModels.swift */,
+				B0012000000000000000000 /* ManualParameters.swift */,
+				B0013000000000000000000 /* MediaModels.swift */,
+				B0014000000000000000000 /* CameraCapabilities.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		C00100000000000000000007 /* Engine */ = {
+			isa = PBXGroup;
+			children = (
+				B0015000000000000000000 /* CameraEngine.swift */,
+				B0016000000000000000000 /* ManualControlsHelper.swift */,
+			);
+			path = Engine;
+			sourceTree = "<group>";
+		};
+		C00100000000000000000008 /* Analyzers */ = {
+			isa = PBXGroup;
+			children = (
+				B0017000000000000000000 /* FrameAnalysisResult.swift */,
+				B0018000000000000000000 /* VideoFrameAnalyzer.swift */,
+			);
+			path = Analyzers;
+			sourceTree = "<group>";
+		};
+		C00100000000000000000009 /* Advanced */ = {
+			isa = PBXGroup;
+			children = (
+				B0019000000000000000000 /* GyroMotionManager.swift */,
+				B0020000000000000000000 /* EnhancedRawEngine.swift */,
+				B0021000000000000000000 /* HdrBracketingEngine.swift */,
+				B0022000000000000000000 /* SmartSelfieVisionEngine.swift */,
+			);
+			path = Advanced;
+			sourceTree = "<group>";
+		};
+		C00100000000000000000010 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				B0023000000000000000000 /* CameraViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		6002 /* Lumina */ = {
+			isa = PBXGroup;
+			children = (
+				C00100000000000000000005 /* App */,
+				C00100000000000000000006 /* Models */,
+				C00100000000000000000007 /* Engine */,
+				C00100000000000000000008 /* Analyzers */,
+				C00100000000000000000009 /* Advanced */,
+				C00100000000000000000010 /* ViewModels */,
+				C00100000000000000000004 /* UI */,
+				2002 /* Assets.xcassets */,
+				2004 /* Info.plist */,
+			);
+			path = Lumina;
+			sourceTree = "<group>";
+		};
+		6003 /* LuminaTests */ = {
+			isa = PBXGroup;
+			children = (
+				2003 /* LuminaLogicTests.swift */,
+			);
+			path = LuminaTests;
+			sourceTree = "<group>";
+		};
+		6004 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2005 /* Lumina.app */,
+				2006 /* LuminaTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		4001 /* Lumina */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7001 /* Build configuration list for PBXNativeTarget "Lumina" */;
+			buildPhases = (
+				8001 /* Sources */,
+				5001 /* Frameworks */,
+				8002 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Lumina;
+			productName = Lumina;
+			productReference = 2005 /* Lumina.app */;
+			productType = "com.apple.product-type.application";
+		};
+		4002 /* LuminaTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7002 /* Build configuration list for PBXNativeTarget "LuminaTests" */;
+			buildPhases = (
+				8003 /* Sources */,
+				5002 /* Frameworks */,
+				8004 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9001 /* PBXTargetDependency */,
+			);
+			name = LuminaTests;
+			productName = LuminaTests;
+			productReference = 2006 /* LuminaTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					4001 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+					4002 = {
+						CreatedOnToolsVersion = 15.0;
+						TestTargetID = 4001;
+					};
+				};
+			};
+			buildConfigurationList = 7003 /* Build configuration list for PBXProject "Lumina" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 6001;
+			productRefGroup = 6004 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4001 /* Lumina */,
+				4002 /* LuminaTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8002 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1002 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8004 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A0010000000000000000000 /* Sources */,
+				A0011000000000000000000 /* Sources */,
+				A0012000000000000000000 /* Sources */,
+				A0013000000000000000000 /* Sources */,
+				A0014000000000000000000 /* Sources */,
+				A0015000000000000000000 /* Sources */,
+				A0016000000000000000000 /* Sources */,
+				A0017000000000000000000 /* Sources */,
+				A0018000000000000000000 /* Sources */,
+				A0019000000000000000000 /* Sources */,
+				A0020000000000000000000 /* Sources */,
+				A0021000000000000000000 /* Sources */,
+				A0022000000000000000000 /* Sources */,
+				A0023000000000000000000 /* Sources */,
+				A0024000000000000000000 /* Sources */,
+				A0025000000000000000000 /* Sources */,
+				A0026000000000000000000 /* Sources */,
+				A0027000000000000000000 /* Sources */,
+				A0028000000000000000000 /* Sources */,
+				A0029000000000000000000 /* Sources */,
+				A0030000000000000000000 /* Sources */,
+				A0031000000000000000000 /* Sources */,
+				A0032000000000000000000 /* Sources */,
+				A0033000000000000000000 /* Sources */,
+				A0034000000000000000000 /* Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8003 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1003 /* LuminaLogicTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		9001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4001 /* Lumina */;
+			targetProxy = 3001 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		7004 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Lumina/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Lumina Camera";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lumina.manualcamera;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		7005 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Lumina/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Lumina Camera";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lumina.manualcamera;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		7006 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lumina.manualcamera.LuminaTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Lumina.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Lumina";
+			};
+			name = Debug;
+		};
+		7007 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lumina.manualcamera.LuminaTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Lumina.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Lumina";
+			};
+			name = Release;
+		};
+		7008 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		7009 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		7001 /* Build configuration list for PBXNativeTarget "Lumina" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7004 /* Debug */,
+				7005 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7002 /* Build configuration list for PBXNativeTarget "LuminaTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7006 /* Debug */,
+				7007 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7003 /* Build configuration list for PBXProject "Lumina" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7008 /* Debug */,
+				7009 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0001 /* Project object */;
+}

@@ -1,0 +1,54 @@
+name: iOS Simulator Build & Test
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    name: Build & Test on iOS Simulator
+    runs-on: macos-14
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set Xcode Version
+        run: sudo xcode-select -s /Applications/Xcode_15.4.app
+
+      - name: List Available Simulators
+        run: xcrun simctl list devices available
+
+      - name: Build for iOS Simulator
+        run: |
+          xcodebuild clean build \
+            -project Lumina.xcodeproj \
+            -scheme Lumina \
+            -sdk iphonesimulator \
+            -destination 'platform=iOS Simulator,name=iPhone 15 Pro' \
+            -configuration Debug \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Run Unit Tests
+        run: |
+          xcodebuild test \
+            -project Lumina.xcodeproj \
+            -scheme Lumina \
+            -sdk iphonesimulator \
+            -destination 'platform=iOS Simulator,name=iPhone 15 Pro' \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Package Simulator App Bundle
+        run: |
+          cd build/Build/Products/Debug-iphonesimulator
+          zip -r Lumina-Simulator.app.zip Lumina.app
+
+      - name: Upload Simulator App Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Lumina-Simulator-Build
+          path: build/Build/Products/Debug-iphonesimulator/Lumina-Simulator.app.zip
