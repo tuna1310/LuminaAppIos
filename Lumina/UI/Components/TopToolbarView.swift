@@ -19,15 +19,16 @@ struct TopToolbarView: View {
 
             Spacer()
 
-            // Quick Format Switch
+            // Quick Format Switch (JPG -> HEIC -> RAW -> ProRAW if supported)
             Button(action: {
-                engine.captureFormat = (engine.captureFormat == .rawDng) ? .jpeg : .rawDng
+                cycleFormat()
             }) {
-                Text(engine.captureFormat == .rawDng ? "RAW" : "JPG")
+                let isRaw = (engine.captureFormat == .rawDng || engine.captureFormat == .appleProRaw)
+                Text(engine.captureFormat.shortLabel)
                     .font(.system(size: 11, weight: .bold, design: .monospaced))
                     .padding(.horizontal, 8).padding(.vertical, 4)
-                    .background(engine.captureFormat == .rawDng ? Color.yellow : Color.gray.opacity(0.4))
-                    .foregroundColor(engine.captureFormat == .rawDng ? .black : .white)
+                    .background(isRaw ? Color.yellow : Color.gray.opacity(0.4))
+                    .foregroundColor(isRaw ? .black : .white)
                     .cornerRadius(4)
             }
 
@@ -60,17 +61,22 @@ struct TopToolbarView: View {
                     }
                 }
                 Button("Histogram: \(engine.histogramMode.rawValue)") {
-                    engine.histogramMode = (engine.histogramMode == .off) ? .luma : .off
+                    switch engine.histogramMode {
+                    case .off: engine.histogramMode = .luma
+                    case .luma: engine.histogramMode = .rgb
+                    case .rgb: engine.histogramMode = .off
+                    }
                 }
                 Button("Focus Peaking: \(engine.isFocusPeakingEnabled ? "BẬT" : "TẮT")") {
                     engine.isFocusPeakingEnabled.toggle()
                 }
-                Button("Zebra Clipping: \(engine.isExposureClippingEnabled ? "BẬT" : "TẮT")") {
+                Button("Exposure Clipping: \(engine.isExposureClippingEnabled ? "BẬT" : "TẮT")") {
                     engine.isExposureClippingEnabled.toggle()
                 }
             } label: {
+                let hasActiveOverlay = engine.gridType != .off || engine.histogramMode != .off || engine.isFocusPeakingEnabled || engine.isExposureClippingEnabled
                 Image(systemName: "slider.horizontal.3")
-                    .foregroundColor(.white)
+                    .foregroundColor(hasActiveOverlay ? .yellow : .white)
                     .padding(8)
             }
 
@@ -87,6 +93,17 @@ struct TopToolbarView: View {
         .padding(.top, 44)
         .background(Color.black.opacity(0.6))
     }
-}
 
-// MARK: - UI: Overlays (Grid & Realtime Histogram)
+    private func cycleFormat() {
+        switch engine.captureFormat {
+        case .jpeg:
+            engine.captureFormat = .heic
+        case .heic:
+            engine.captureFormat = .rawDng
+        case .rawDng:
+            engine.captureFormat = engine.supportsProRaw ? .appleProRaw : .jpeg
+        case .appleProRaw:
+            engine.captureFormat = .jpeg
+        }
+    }
+}

@@ -198,46 +198,13 @@ public final class CameraViewModel: ObservableObject {
             engine.capturePhoto(format: captureFormat, isFlashOn: isFlashOn)
 
         case .bracketing:
-            let baseSec = shutterSpeed.isAuto ? 1.0 / 60.0 : shutterSpeed.seconds
-            let fixedIso = iso.isAuto ? 200 : iso.value
-            let shots = HdrBracketingEngine.create3ShotSequence(baseShutterSeconds: baseSec, fixedIso: fixedIso)
-
-            DispatchQueue.global().async {
-                for shot in shots {
-                    DispatchQueue.main.sync {
-                        self.shutterSpeed.seconds = shot.shutterSpeedSeconds
-                        self.shutterSpeed.isAuto = false
-                        self.iso.value = shot.iso
-                        self.iso.isAuto = false
-                        self.applyManualSettings()
-                        self.engine.capturePhoto(format: self.captureFormat, isFlashOn: self.isFlashOn)
-                    }
-                    Thread.sleep(forTimeInterval: 0.3)
-                }
-            }
+            engine.triggerCapture()
 
         case .enhancedRaw:
-            let optimal = EnhancedRawEngine.computeOptimalExposure(
-                gyroSpeedRadPerSec: gyroManager.currentAngularSpeed,
-                minIso: engine.capabilities.minIso,
-                maxIso: engine.capabilities.maxIso
-            )
-            shutterSpeed.seconds = optimal.shutterSpeedSeconds
-            shutterSpeed.isAuto = false
-            iso.value = optimal.iso
-            iso.isAuto = false
-            applyManualSettings()
-            engine.capturePhoto(format: .rawDng, isFlashOn: isFlashOn)
+            engine.triggerCapture()
 
         case .smartSelfie:
-            if engine.currentLens != .front {
-                switchLens(.front)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                    self.engine.capturePhoto(format: self.captureFormat, isFlashOn: self.isFlashOn)
-                }
-            } else {
-                engine.capturePhoto(format: captureFormat, isFlashOn: isFlashOn)
-            }
+            engine.triggerCapture()
         }
     }
 }

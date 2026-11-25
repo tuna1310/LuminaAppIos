@@ -24,21 +24,27 @@ public struct HdrBracketingEngine {
         }
     }
 
-    /// Creates 3 exposures (-2 EV, 0 EV, +2 EV) keeping ISO strictly fixed
+    /// Creates 3 exposures (-evStep EV, 0 EV, +evStep EV) keeping ISO strictly fixed.
+    /// Supports EV steps up to ±3 EV.
     public static func create3ShotSequence(
         baseShutterSeconds: Double,
         fixedIso: Float,
+        evStep: Double = 2.0,
         minSec: Double = 1.0 / 8000.0,
         maxSec: Double = 2.0
     ) -> [BracketShot] {
-        let under = (baseShutterSeconds / 4.0).clamped(to: minSec...maxSec)
+        let clampedStep = evStep.clamped(to: 1.0...3.0)
+        let evOffsetInt = Int(round(clampedStep))
+        let factor = pow(2.0, clampedStep)
+
+        let under = (baseShutterSeconds / factor).clamped(to: minSec...maxSec)
         let normal = baseShutterSeconds.clamped(to: minSec...maxSec)
-        let over = (baseShutterSeconds * 4.0).clamped(to: minSec...maxSec)
+        let over = (baseShutterSeconds * factor).clamped(to: minSec...maxSec)
 
         return [
-            BracketShot(index: 1, evOffset: -2, shutterSpeedSeconds: under, iso: fixedIso, label: "EV -2"),
+            BracketShot(index: 1, evOffset: -evOffsetInt, shutterSpeedSeconds: under, iso: fixedIso, label: "EV -\(evOffsetInt)"),
             BracketShot(index: 2, evOffset: 0, shutterSpeedSeconds: normal, iso: fixedIso, label: "EV 0"),
-            BracketShot(index: 3, evOffset: 2, shutterSpeedSeconds: over, iso: fixedIso, label: "EV +2")
+            BracketShot(index: 3, evOffset: evOffsetInt, shutterSpeedSeconds: over, iso: fixedIso, label: "EV +\(evOffsetInt)")
         ]
     }
 }
@@ -59,9 +65,22 @@ public struct BracketingManager {
         }
     }
 
-    public static func create3ShotBracket(baseShutterSec: Double, baseIso: Float, minSec: Double = 1.0/8000, maxSec: Double = 2.0) -> [BracketShot] {
-        let shots = HdrBracketingEngine.create3ShotSequence(baseShutterSeconds: baseShutterSec, fixedIso: baseIso, minSec: minSec, maxSec: maxSec)
-        return shots.map { BracketShot(index: $0.index, evOffset: $0.evOffset, shutterSeconds: $0.shutterSpeedSeconds, iso: $0.iso, label: $0.label) }
+    public static func create3ShotBracket(
+        baseShutterSec: Double,
+        baseIso: Float,
+        evStep: Double = 2.0,
+        minSec: Double = 1.0 / 8000.0,
+        maxSec: Double = 2.0
+    ) -> [BracketShot] {
+        let shots = HdrBracketingEngine.create3ShotSequence(
+            baseShutterSeconds: baseShutterSec,
+            fixedIso: baseIso,
+            evStep: evStep,
+            minSec: minSec,
+            maxSec: maxSec
+        )
+        return shots.map {
+            BracketShot(index: $0.index, evOffset: $0.evOffset, shutterSeconds: $0.shutterSpeedSeconds, iso: $0.iso, label: $0.label)
+        }
     }
 }
-

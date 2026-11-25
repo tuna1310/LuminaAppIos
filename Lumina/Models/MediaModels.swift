@@ -7,7 +7,7 @@
 
 import UIKit
 
-public struct ExifDisplayInfo: Identifiable, Equatable {
+public struct ExifDisplayInfo: Identifiable, Equatable, Codable {
     public let id: UUID
     public var iso: String
     public var shutter: String
@@ -17,6 +17,8 @@ public struct ExifDisplayInfo: Identifiable, Equatable {
     public var resolution: String
     public var fileSize: String
     public var whiteBalance: String
+    public var colorSpace: String
+    public var shootingMode: String
     public var dateTaken: String
     public var cameraModel: String
 
@@ -30,6 +32,8 @@ public struct ExifDisplayInfo: Identifiable, Equatable {
         resolution: String = "12 MP",
         fileSize: String = "2.4 MB",
         whiteBalance: String = "Auto",
+        colorSpace: String = "sRGB",
+        shootingMode: String = "Photo",
         dateTaken: String = "",
         cameraModel: String = "iPhone"
     ) {
@@ -42,6 +46,8 @@ public struct ExifDisplayInfo: Identifiable, Equatable {
         self.resolution = resolution
         self.fileSize = fileSize
         self.whiteBalance = whiteBalance
+        self.colorSpace = colorSpace
+        self.shootingMode = shootingMode
         self.dateTaken = dateTaken
         self.cameraModel = cameraModel
     }
@@ -52,16 +58,19 @@ public struct CapturedPhoto: Identifiable {
     public let image: UIImage
     public let exifInfo: ExifDisplayInfo
     public let timestamp: Date
+    public let fileURL: URL?
 
     public init(
         id: UUID = UUID(),
         image: UIImage,
         exifInfo: ExifDisplayInfo,
-        timestamp: Date = Date()
+        timestamp: Date = Date(),
+        fileURL: URL? = nil
     ) {
         self.id = id
         self.image = image
         self.exifInfo = exifInfo
         self.timestamp = timestamp
+        self.fileURL = fileURL
     }
 }

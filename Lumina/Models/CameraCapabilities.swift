@@ -16,6 +16,9 @@ public struct CameraCapabilities: Equatable {
     public var maxEv: Float
     public var supportsAppleProRaw: Bool
     public var supportsWideColorP3: Bool
+    public var supports48MP: Bool
+    public var maxResolutionWidth: Int32
+    public var maxResolutionHeight: Int32
 
     public init(
         minIso: Float = 50.0,
@@ -25,7 +28,10 @@ public struct CameraCapabilities: Equatable {
         minEv: Float = -3.0,
         maxEv: Float = 3.0,
         supportsAppleProRaw: Bool = false,
-        supportsWideColorP3: Bool = true
+        supportsWideColorP3: Bool = true,
+        supports48MP: Bool = false,
+        maxResolutionWidth: Int32 = 4032,
+        maxResolutionHeight: Int32 = 3024
     ) {
         self.minIso = minIso
         self.maxIso = maxIso
@@ -35,5 +41,8 @@ public struct CameraCapabilities: Equatable {
         self.maxEv = maxEv
         self.supportsAppleProRaw = supportsAppleProRaw
         self.supportsWideColorP3 = supportsWideColorP3
+        self.supports48MP = supports48MP
+        self.maxResolutionWidth = maxResolutionWidth
+        self.maxResolutionHeight = maxResolutionHeight
     }
 }

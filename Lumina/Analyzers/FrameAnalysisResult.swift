@@ -14,6 +14,8 @@ public struct FrameAnalysisResult {
     public var bHistogram: [CGFloat]
     public var peakingImage: UIImage?
     public var clippingImage: UIImage?
+    public var hasOverexposure: Bool
+    public var hasUnderexposure: Bool
 
     public init(
         lumaHistogram: [CGFloat] = Array(repeating: 0, count: 64),
@@ -21,7 +23,9 @@ public struct FrameAnalysisResult {
         gHistogram: [CGFloat] = Array(repeating: 0, count: 64),
         bHistogram: [CGFloat] = Array(repeating: 0, count: 64),
         peakingImage: UIImage? = nil,
-        clippingImage: UIImage? = nil
+        clippingImage: UIImage? = nil,
+        hasOverexposure: Bool = false,
+        hasUnderexposure: Bool = false
     ) {
         self.lumaHistogram = lumaHistogram
         self.rHistogram = rHistogram
@@ -29,5 +33,7 @@ public struct FrameAnalysisResult {
         self.bHistogram = bHistogram
         self.peakingImage = peakingImage
         self.clippingImage = clippingImage
+        self.hasOverexposure = hasOverexposure
+        self.hasUnderexposure = hasUnderexposure
     }
 }

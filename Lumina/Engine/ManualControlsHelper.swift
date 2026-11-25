@@ -79,23 +79,10 @@ public final class ManualControlsHelper {
 }
 
 public struct ShutterSpeedHelper {
-    public static let standardSteps: [Double] = [
-        1.0/8000, 1.0/4000, 1.0/2000, 1.0/1000,
-        1.0/500, 1.0/250, 1.0/125, 1.0/60,
-        1.0/30, 1.0/15, 1.0/8, 1.0/4, 0.5, 1.0, 2.0
-    ]
+    public static let standardSteps: [Double] = ShutterSpeed.standardSteps
 
     public static func formatSeconds(_ seconds: Double) -> String {
-        if seconds >= 1.0 {
-            if seconds == floor(seconds) {
-                return "\(Int(seconds))s"
-            } else {
-                return String(format: "%.1fs", seconds)
-            }
-        } else {
-            let fraction = Int(round(1.0 / seconds))
-            return "1/\(fraction)s"
-        }
+        ShutterSpeed.format(seconds: seconds)
     }
 }
 

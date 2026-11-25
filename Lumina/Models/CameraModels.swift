@@ -11,14 +11,41 @@ public enum CaptureFormat: String, CaseIterable, Identifiable {
     case jpeg = "JPEG"
     case heic = "HEIC"
     case rawDng = "RAW (DNG)"
+    case appleProRaw = "Apple ProRAW"
     public var id: String { rawValue }
 
     public var fileExtension: String {
         switch self {
         case .jpeg: return "jpg"
         case .heic: return "heic"
-        case .rawDng: return "dng"
+        case .rawDng, .appleProRaw: return "dng"
         }
+    }
+
+    public var shortLabel: String {
+        switch self {
+        case .jpeg: return "JPG"
+        case .heic: return "HEIC"
+        case .rawDng: return "RAW"
+        case .appleProRaw: return "ProRAW"
+        }
+    }
+}
+
+public enum PhotoResolutionOption: String, CaseIterable, Identifiable {
+    case standard12MP = "12 MP"
+    case max48MP = "48 MP"
+    public var id: String { rawValue }
+}
+
+public enum BracketingEvRange: Double, CaseIterable, Identifiable {
+    case one = 1.0
+    case two = 2.0
+    case three = 3.0
+    public var id: Double { rawValue }
+
+    public var displayString: String {
+        "±\(Int(rawValue)) EV"
     }
 }
 
