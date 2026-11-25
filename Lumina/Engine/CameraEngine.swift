@@ -32,6 +32,49 @@ public final class CameraEngine: NSObject, ObservableObject, AVCapturePhotoCaptu
     // Realtime analysis result
     @Published public var analysisResult = FrameAnalysisResult()
 
+    // UI state & bindings
+    @Published public var message: String? = nil
+    @Published public var lastCapturedImage: UIImage? = nil
+    @Published public var lastCapturedExif: ExifDisplayInfo? = nil
+    @Published public var isCapturing: Bool = false
+    @Published public var isFlashOn: Bool = false
+
+    // Manual Settings State
+    @Published public var selectedTab: ControlTab = .none
+    @Published public var captureFormat: CaptureFormat = .jpeg
+    @Published public var colorSpaceOption: ColorSpaceOption = .sRGB
+    @Published public var postProcessingQuality: PostProcessingQuality = .standard
+    @Published public var shootingMode: ShootingMode = .photo
+    @Published public var gridType: GridType = .off
+    @Published public var histogramMode: HistogramMode = .off
+    @Published public var isFocusPeakingEnabled: Bool = false
+    @Published public var isExposureClippingEnabled: Bool = false
+
+    // 5 Manual Controls
+    @Published public var isShutterAuto: Bool = true
+    @Published public var shutterSpeedSeconds: Double = 1.0 / 60.0
+    @Published public var isIsoAuto: Bool = true
+    @Published public var isoValue: Float = 100.0
+    @Published public var isFocusAuto: Bool = true
+    @Published public var lensPosition: Float = 0.5
+    @Published public var isWbAuto: Bool = true
+    @Published public var wbKelvin: Float = 5500.0
+    @Published public var evBias: Float = 0.0
+
+    // Realtime Overlays data
+    @Published public var lumaHistogram: [CGFloat] = Array(repeating: 0, count: 64)
+    @Published public var peakingOverlayImage: UIImage? = nil
+    @Published public var clippingOverlayImage: UIImage? = nil
+
+    // Hardware limits shortcuts
+    public var minIso: Float { capabilities.minIso }
+    public var maxIso: Float { capabilities.maxIso }
+    public var minDurationSec: Double { capabilities.minExposureDurationSec }
+    public var maxDurationSec: Double { capabilities.maxExposureDurationSec }
+    public var minEv: Float { capabilities.minEv }
+    public var maxEv: Float { capabilities.maxEv }
+    public var supportsProRaw: Bool { capabilities.supportsAppleProRaw }
+
     // Callbacks
     public var onPhotoCaptured: ((UIImage, ExifDisplayInfo) -> Void)?
     public var onCaptureError: ((Error) -> Void)?
@@ -169,6 +212,71 @@ public final class CameraEngine: NSObject, ObservableObject, AVCapturePhotoCaptu
         }
     }
 
+    public func applyColorSpace() {
+        guard let device = currentDevice else { return }
+        do {
+            try device.lockForConfiguration()
+            if colorSpaceOption == .displayP3 && device.activeFormat.supportedColorSpaces.contains(.P3_D65) {
+                device.activeColorSpace = .P3_D65
+            } else {
+                device.activeColorSpace = .sRGB
+            }
+            device.unlockForConfiguration()
+        } catch {
+            print("Error applying color space: \(error)")
+        }
+    }
+
+    public func applyManualControls() {
+        guard let device = currentDevice else { return }
+        do {
+            try device.lockForConfiguration()
+
+            if !isShutterAuto || !isIsoAuto {
+                let duration = isShutterAuto ? AVCaptureDevice.currentExposureDuration : CMTime(seconds: shutterSpeedSeconds, preferredTimescale: 1_000_000_000)
+                let iso = isIsoAuto ? AVCaptureDevice.currentISO : max(minIso, min(isoValue, maxIso))
+                device.setExposureModeCustom(duration: duration, iso: iso, completionHandler: nil)
+            } else {
+                if device.isExposureModeSupported(.continuousAutoExposure) {
+                    device.exposureMode = .continuousAutoExposure
+                }
+                device.setExposureTargetBias(max(minEv, min(evBias, maxEv)), completionHandler: nil)
+            }
+
+            if !isFocusAuto {
+                device.setFocusModeLocked(lensPosition: max(0.0, min(lensPosition, 1.0)), completionHandler: nil)
+            } else {
+                if device.isFocusModeSupported(.continuousAutoFocus) {
+                    device.focusMode = .continuousAutoFocus
+                }
+            }
+
+            if !isWbAuto {
+                let tempAndTint = AVCaptureDevice.WhiteBalanceTemperatureAndTintValues(temperature: wbKelvin, tint: 0)
+                var gains = device.deviceWhiteBalanceGains(for: tempAndTint)
+                let maxGain = device.maxWhiteBalanceGain
+                gains.redGain = max(1.0, min(gains.redGain, maxGain))
+                gains.greenGain = max(1.0, min(gains.greenGain, maxGain))
+                gains.blueGain = max(1.0, min(gains.blueGain, maxGain))
+                device.setWhiteBalanceModeLocked(with: gains, completionHandler: nil)
+            } else {
+                if device.isWhiteBalanceModeSupported(.continuousAutoWhiteBalance) {
+                    device.whiteBalanceMode = .continuousAutoWhiteBalance
+                }
+            }
+
+            device.unlockForConfiguration()
+        } catch {
+            print("Error applying manual controls: \(error)")
+        }
+    }
+
+    public func triggerCapture() {
+        guard !isCapturing else { return }
+        isCapturing = true
+        capturePhoto(format: captureFormat, isFlashOn: isFlashOn)
+    }
+
     public func capturePhoto(format: CaptureFormat, isFlashOn: Bool) {
         let settings: AVCapturePhotoSettings
         if format == .rawDng && photoOutput.availableRawPhotoPixelFormatTypes.contains(kCVPixelFormatType_14Bayer_RGGB) {
@@ -183,7 +291,11 @@ public final class CameraEngine: NSObject, ObservableObject, AVCapturePhotoCaptu
     // MARK: - AVCapturePhotoCaptureDelegate
     public func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         if let err = error {
-            DispatchQueue.main.async { self.onCaptureError?(err) }
+            DispatchQueue.main.async {
+                self.isCapturing = false
+                self.message = "Lỗi chụp: \(err.localizedDescription)"
+                self.onCaptureError?(err)
+            }
             return
         }
 
@@ -213,6 +325,10 @@ public final class CameraEngine: NSObject, ObservableObject, AVCapturePhotoCaptu
         )
 
         DispatchQueue.main.async {
+            self.isCapturing = false
+            self.lastCapturedImage = image
+            self.lastCapturedExif = exifInfo
+            self.message = "Đã chụp ảnh: \(exifInfo.format)"
             self.onPhotoCaptured?(image, exifInfo)
         }
     }
@@ -222,6 +338,9 @@ public final class CameraEngine: NSObject, ObservableObject, AVCapturePhotoCaptu
         let result = frameAnalyzer.analyze(sampleBuffer: sampleBuffer)
         DispatchQueue.main.async {
             self.analysisResult = result
+            self.lumaHistogram = result.lumaHistogram
+            self.peakingOverlayImage = result.focusPeakingMask
+            self.clippingOverlayImage = result.zebraClippingMask
         }
     }
 }

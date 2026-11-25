@@ -80,7 +80,7 @@ struct MiniHistogramView: View {
                     path.addLine(to: CGPoint(x: x, y: y))
                 }
                 path.addLine(to: CGPoint(x: geo.size.width, y: geo.size.height))
-                path.close()
+                path.closeSubpath()
             }
             .fill(Color.yellow.opacity(0.5))
             .background(Color.black.opacity(0.65))
