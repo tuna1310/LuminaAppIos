@@ -68,10 +68,10 @@ struct PermissionDeniedView: View {
             Image(systemName: "camera.fill")
                 .font(.system(size: 48))
                 .foregroundColor(.yellow)
-            Text("Cần cấp quyền Camera để sử dụng Lumina")
+            Text("Camera access is required to use Lumina")
                 .foregroundColor(.white)
                 .multilineTextAlignment(.center)
-            Button("Cấp Quyền Ngay") {
+            Button("Grant Permission") {
                 if let url = URL(string: UIApplication.openSettingsURLString) {
                     UIApplication.shared.open(url)
                 }

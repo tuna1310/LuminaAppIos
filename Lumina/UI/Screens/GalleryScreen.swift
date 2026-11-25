@@ -17,19 +17,19 @@ struct GalleryDetailView: View {
 
                         if let exif = engine.lastCapturedExif {
                             VStack(spacing: 8) {
-                                Text("THÔNG SỐ CHI TIẾT EXIF")
+                                Text("EXIF DETAILS")
                                     .font(.caption).fontWeight(.bold).foregroundColor(.yellow)
 
                                 HStack {
                                     ExifItem(label: "ISO", value: exif.iso)
                                     ExifItem(label: "SHUTTER", value: exif.shutter)
-                                    ExifItem(label: "KHẨU ĐỘ", value: exif.aperture)
-                                    ExifItem(label: "TIÊU CỰ", value: exif.focalLength)
+                                    ExifItem(label: "APERTURE", value: exif.aperture)
+                                    ExifItem(label: "FOCAL LENGTH", value: exif.focalLength)
                                 }
                                 HStack {
-                                    ExifItem(label: "ĐỊNH DẠNG", value: exif.format)
-                                    ExifItem(label: "ĐỘ PHÂN GIẢI", value: exif.resolution)
-                                    ExifItem(label: "DUNG LƯỢNG", value: exif.fileSize)
+                                    ExifItem(label: "FORMAT", value: exif.format)
+                                    ExifItem(label: "RESOLUTION", value: exif.resolution)
+                                    ExifItem(label: "FILE SIZE", value: exif.fileSize)
                                     ExifItem(label: "WB", value: exif.whiteBalance)
                                 }
                             }
@@ -41,20 +41,20 @@ struct GalleryDetailView: View {
 
                         HStack(spacing: 32) {
                             ShareLink(item: Image(uiImage: image), preview: SharePreview("Lumina Photo", image: Image(uiImage: image))) {
-                                Label("Chia sẻ", systemImage: "square.and.arrow.up").foregroundColor(.white)
+                                Label("Share", systemImage: "square.and.arrow.up").foregroundColor(.white)
                             }
                         }
                         Spacer()
                     }
                 } else {
-                    Text("Chưa có ảnh nào được chụp trong phiên này.").foregroundColor(.gray)
+                    Text("No photos captured in this session yet.").foregroundColor(.gray)
                 }
             }
-            .navigationTitle("Thư viện Lumina")
+            .navigationTitle("Lumina Gallery")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Đóng") { dismiss() }.foregroundColor(.yellow)
+                    Button("Close") { dismiss() }.foregroundColor(.yellow)
                 }
             }
         }

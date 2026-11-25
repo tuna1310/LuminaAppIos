@@ -54,13 +54,13 @@ public final class CameraViewModel: ObservableObject {
             self.isCapturing = false
             let photo = CapturedPhoto(image: image, exifInfo: exif)
             self.lastCapturedPhoto = photo
-            self.message = "Đã lưu ảnh: \(exif.format)"
+            self.message = "Photo saved: \(exif.format)"
         }
 
         engine.onCaptureError = { [weak self] error in
             guard let self = self else { return }
             self.isCapturing = false
-            self.message = "Lỗi chụp: \(error.localizedDescription)"
+            self.message = "Capture error: \(error.localizedDescription)"
         }
     }
 

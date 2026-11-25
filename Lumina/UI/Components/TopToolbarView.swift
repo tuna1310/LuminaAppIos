@@ -51,7 +51,7 @@ struct TopToolbarView: View {
 
             // Overlays Menu
             Menu {
-                Button("Lưới: \(engine.gridType.rawValue)") {
+                Button("Grid: \(engine.gridType.rawValue)") {
                     switch engine.gridType {
                     case .off: engine.gridType = .thirds
                     case .thirds: engine.gridType = .fourByFour
@@ -62,10 +62,10 @@ struct TopToolbarView: View {
                 Button("Histogram: \(engine.histogramMode.rawValue)") {
                     engine.histogramMode = (engine.histogramMode == .off) ? .luma : .off
                 }
-                Button("Focus Peaking: \(engine.isFocusPeakingEnabled ? "BẬT" : "TẮT")") {
+                Button("Focus Peaking: \(engine.isFocusPeakingEnabled ? "ON" : "OFF")") {
                     engine.isFocusPeakingEnabled.toggle()
                 }
-                Button("Zebra Clipping: \(engine.isExposureClippingEnabled ? "BẬT" : "TẮT")") {
+                Button("Zebra Clipping: \(engine.isExposureClippingEnabled ? "ON" : "OFF")") {
                     engine.isExposureClippingEnabled.toggle()
                 }
             } label: {

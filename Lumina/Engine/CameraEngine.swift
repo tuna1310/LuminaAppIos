@@ -293,7 +293,7 @@ public final class CameraEngine: NSObject, ObservableObject, AVCapturePhotoCaptu
         if let err = error {
             DispatchQueue.main.async {
                 self.isCapturing = false
-                self.message = "Lỗi chụp: \(err.localizedDescription)"
+                self.message = "Capture error: \(err.localizedDescription)"
                 self.onCaptureError?(err)
             }
             return
@@ -328,7 +328,7 @@ public final class CameraEngine: NSObject, ObservableObject, AVCapturePhotoCaptu
             self.isCapturing = false
             self.lastCapturedImage = image
             self.lastCapturedExif = exifInfo
-            self.message = "Đã chụp ảnh: \(exifInfo.format)"
+            self.message = "Photo captured: \(exifInfo.format)"
             self.onPhotoCaptured?(image, exifInfo)
         }
     }
