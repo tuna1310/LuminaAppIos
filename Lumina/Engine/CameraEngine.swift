@@ -339,8 +339,8 @@ public final class CameraEngine: NSObject, ObservableObject, AVCapturePhotoCaptu
         DispatchQueue.main.async {
             self.analysisResult = result
             self.lumaHistogram = result.lumaHistogram
-            self.peakingOverlayImage = result.focusPeakingMask
-            self.clippingOverlayImage = result.zebraClippingMask
+            self.peakingOverlayImage = result.peakingImage
+            self.clippingOverlayImage = result.clippingImage
         }
     }
 }

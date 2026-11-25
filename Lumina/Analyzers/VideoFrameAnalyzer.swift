@@ -48,12 +48,19 @@ public final class VideoFrameAnalyzer: NSObject {
                 let gVal = buffer[offset + 1]
                 let rVal = buffer[offset + 2]
 
-                let luma = Int((Double(rVal) * 0.299 + Double(gVal) * 0.587 + Double(bVal) * 0.114) / 4.0)
+                let rD = Double(rVal) * 0.299
+                let gD = Double(gVal) * 0.587
+                let bD = Double(bVal) * 0.114
+                let luma = Int((rD + gD + bD) / 4.0)
                 let lIndex = min(max(luma, 0), 63)
                 lumaBins[lIndex] += 1
-                rBins[min(max(Int(rVal / 4), 0), 63)] += 1
-                gBins[min(max(Int(gVal / 4), 0), 63)] += 1
-                bBins[min(max(Int(bVal / 4), 0), 63)] += 1
+
+                let rIdx = min(max(Int(rVal) / 4, 0), 63)
+                let gIdx = min(max(Int(gVal) / 4, 0), 63)
+                let bIdx = min(max(Int(bVal) / 4, 0), 63)
+                rBins[rIdx] += 1
+                gBins[gIdx] += 1
+                bBins[bIdx] += 1
             }
         }
 
