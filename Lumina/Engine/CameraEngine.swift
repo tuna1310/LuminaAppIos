@@ -193,7 +193,7 @@ public final class CameraEngine: NSObject, ObservableObject, AVCapturePhotoCaptu
 
             if self.session.canAddOutput(self.photoOutput) {
                 self.session.addOutput(self.photoOutput)
-                self.photoOutput.isHighResolutionCaptureEnabled = true
+                // isHighResolutionCaptureEnabled deprecated in iOS 16; maxPhotoDimensions used in configurePhotoOutputDimensions
                 if self.photoOutput.isAppleProRAWSupported {
                     self.photoOutput.isAppleProRAWEnabled = true
                 }
