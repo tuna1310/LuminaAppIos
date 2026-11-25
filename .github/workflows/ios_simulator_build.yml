@@ -10,7 +10,7 @@ on:
 jobs:
   build-and-package:
     name: Build Simulator & Unsigned IPA
-    runs-on: macos-15
+    runs-on: macos-latest
     timeout-minutes: 25
 
     steps:
