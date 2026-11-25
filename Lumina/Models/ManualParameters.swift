@@ -24,7 +24,7 @@ public struct ShutterSpeed: Equatable {
 
     public var displayString: String {
         guard !isAuto else { return "AUTO" }
-        return format(seconds: seconds)
+        return Self.format(seconds: seconds)
     }
 
     public static func format(seconds: Double) -> String {

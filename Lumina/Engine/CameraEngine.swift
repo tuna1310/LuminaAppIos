@@ -172,7 +172,7 @@ public final class CameraEngine: NSObject, ObservableObject, AVCapturePhotoCaptu
     public func capturePhoto(format: CaptureFormat, isFlashOn: Bool) {
         let settings: AVCapturePhotoSettings
         if format == .rawDng && photoOutput.availableRawPhotoPixelFormatTypes.contains(kCVPixelFormatType_14Bayer_RGGB) {
-            settings = AVCapturePhotoSettings(rawPhotoPixelFormatType: kCVPixelFormatType_14Bayer_RGGB)
+            settings = AVCapturePhotoSettings(rawPixelFormatType: kCVPixelFormatType_14Bayer_RGGB)
         } else {
             settings = AVCapturePhotoSettings()
         }
