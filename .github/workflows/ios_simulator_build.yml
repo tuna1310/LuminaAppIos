@@ -1,4 +1,4 @@
-name: iOS Simulator Build & Test
+name: iOS Build & Package IPA
 
 on:
   push:
@@ -8,47 +8,73 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-test:
-    name: Build & Test on iOS Simulator
-    runs-on: macos-14
+  build-and-package:
+    name: Build Simulator & Unsigned IPA
+    runs-on: macos-15
+    timeout-minutes: 25
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Set Xcode Version
-        run: sudo xcode-select -s /Applications/Xcode_15.4.app
-
-      - name: List Available Simulators
-        run: xcrun simctl list devices available
+      - name: Select Xcode
+        run: |
+          if [ -d "/Applications/Xcode.app/Contents/Developer" ]; then
+            sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+          elif [ -d "/Applications/Xcode_16.4.app/Contents/Developer" ]; then
+            sudo xcode-select -s /Applications/Xcode_16.4.app/Contents/Developer
+          fi
+          xcodebuild -version
+          xcodebuild -list -project Lumina.xcodeproj
 
       - name: Build for iOS Simulator
         run: |
-          xcodebuild clean build \
+          set -o pipefail
+          xcodebuild build \
             -project Lumina.xcodeproj \
             -scheme Lumina \
             -sdk iphonesimulator \
-            -destination 'platform=iOS Simulator,name=iPhone 15 Pro' \
+            -destination 'generic/platform=iOS Simulator' \
             -configuration Debug \
-            -derivedDataPath build \
-            CODE_SIGNING_ALLOWED=NO
+            -derivedDataPath build_sim \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY=""
 
-      - name: Run Unit Tests
+      - name: Archive Release Device App (Unsigned arm64)
         run: |
-          xcodebuild test \
+          set -o pipefail
+          xcodebuild archive \
             -project Lumina.xcodeproj \
             -scheme Lumina \
-            -sdk iphonesimulator \
-            -destination 'platform=iOS Simulator,name=iPhone 15 Pro' \
-            CODE_SIGNING_ALLOWED=NO
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -configuration Release \
+            -archivePath build_archive/Lumina.xcarchive \
+            CODE_SIGN_STYLE=Manual \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            AD_HOC_CODE_SIGNING_ALLOWED=YES \
+            DEVELOPMENT_TEAM=""
 
-      - name: Package Simulator App Bundle
+      - name: Package & Ad-Hoc Sign Unsigned IPA
         run: |
-          cd build/Build/Products/Debug-iphonesimulator
-          zip -r Lumina-Simulator.app.zip Lumina.app
+          APP_PATH="build_archive/Lumina.xcarchive/Products/Applications/Lumina.app"
+          if [ ! -d "$APP_PATH" ]; then
+            echo "::error::Lumina.app not found at $APP_PATH"
+            exit 1
+          fi
+          mkdir -p Payload
+          cp -R "$APP_PATH" Payload/Lumina.app
+          codesign --force --deep --sign - --timestamp=none Payload/Lumina.app || true
+          zip -qry Lumina-unsigned.ipa Payload
+          ls -lh Lumina-unsigned.ipa
 
-      - name: Upload Simulator App Artifact
+      - name: Upload Lumina Unsigned IPA
         uses: actions/upload-artifact@v4
         with:
-          name: Lumina-Simulator-Build
-          path: build/Build/Products/Debug-iphonesimulator/Lumina-Simulator.app.zip
+          name: Lumina-unsigned-IPA
+          path: Lumina-unsigned.ipa
+          if-no-files-found: error
+          retention-days: 30
