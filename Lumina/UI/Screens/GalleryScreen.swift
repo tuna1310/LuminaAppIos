@@ -41,7 +41,7 @@ struct GalleryDetailView: View {
 
                         HStack(spacing: 32) {
                             ShareLink(item: Image(uiImage: image), preview: SharePreview("Lumina Photo", image: Image(uiImage: image))) {
-                                Label("Chia sẻ", systemName: "square.and.arrow.up").foregroundColor(.white)
+                                Label("Chia sẻ", systemImage: "square.and.arrow.up").foregroundColor(.white)
                             }
                         }
                         Spacer()
